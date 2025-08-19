@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Practice Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Login Selection -->
+        <div id="loginSelection" class="login-section">
+            <h1 style="margin-bottom: 20px; color: #333; font-size: 2.5em;">Medical Practice Portal</h1>
+            <p style="color: #666; margin-bottom: 40px;">Select your portal to continue</p>
+            
+            <div class="portal-selection">
+                <div class="portal-card doctor-portal" onclick="showLogin('doctor')">
+                    <div class="portal-icon">👨‍⚕️</div>
+                    <h3>Doctor Portal</h3>
+                    <p>Manage patients and consultations</p>
+                </div>
+                <div class="portal-card patient-portal" onclick="showLogin('patient')">
+                    <div class="portal-icon">🏥</div>
+                    <h3>Patient Portal</h3>
+                    <p>View your reports and status</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctor Login -->
+        <div id="doctorLogin" class="main-content hidden">
+            <div class="header">
+                <h2>Doctor Login</h2>
+                <button class="btn back-btn" onclick="showLoginSelection()">← Back</button>
+            </div>
+            <div style="max-width: 400px; margin: 0 auto;">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="doctorEmail" placeholder="doctor@clinic.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="doctorPassword" placeholder="Password">
+                </div>
+                <button class="btn" onclick="loginDoctor()">Login</button>
+            </div>
+        </div>
+
+        <!-- Patient Login -->
+        <div id="patientLogin" class="main-content hidden">
+            <div class="header">
+                <h2>Patient Login</h2>
+                <button class="btn back-btn" onclick="showLoginSelection()">← Back</button>
+            </div>
+            <div style="max-width: 400px; margin: 0 auto;">
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="patientPhone" placeholder="+91 9876543210">
+                </div>
+                <button class="btn" onclick="loginPatient()">Login</button>
+            </div>
+        </div>
+
+        <!-- Doctor Dashboard -->
+        <div id="doctorDashboard" class="main-content hidden">
+            <div class="header">
+                <h2>Doctor Dashboard</h2>
+                <button class="btn back-btn" onclick="logout()">Logout</button>
+            </div>
+            
+            <div class="grid">
+                <div class="portal-card" onclick="showPatientRegistration()">
+                    <div class="portal-icon" style="color: #28a745;">📝</div>
+                    <h3>Register Patient</h3>
+                    <p>Add new patient and assign queue number</p>
+                </div>
+                <div class="portal-card" onclick="showConsultationPage()">
+                    <div class="portal-icon" style="color: #dc3545;">🎤</div>
+                    <h3>Start Consultation</h3>
+                    <p>Record session and generate report</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3>Today's Queue</h3>
+                <div id="queueList"></div>
+            </div>
+        </div>
+
+        <!-- Patient Registration -->
+        <div id="patientRegistration" class="main-content hidden">
+            <div class="header">
+                <h2>Patient Registration</h2>
+                <button class="btn back-btn" onclick="showDoctorDashboard()">← Back</button>
+            </div>
+
+            <div style="max-width: 600px; margin: 0 auto;">
+                <div class="grid">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="patientName" placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="newPatientPhone" placeholder="+91 9876543210">
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="patientAge" placeholder="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="patientGender">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Chief Complaint</label>
+                    <textarea id="patientComplaint" placeholder="Describe the main symptoms or concerns..." rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Medical History</label>
+                    <textarea id="patientHistory" placeholder="Previous medical conditions, medications, etc..." rows="3"></textarea>
+                </div>
+
+                <div id="assignedQueue" class="queue-display hidden">
+                    Queue Number: <span id="queueNumber"></span>
+                </div>
+
+                <button class="btn" onclick="registerPatient()">Register Patient</button>
+            </div>
+        </div>
+
+        <!-- Consultation Page -->
+        <div id="consultationPage" class="main-content hidden">
+            <div class="header">
+                <h2>Patient Consultation</h2>
+                <button class="btn back-btn" onclick="showDoctorDashboard()">← Back</button>
+            </div>
+
+            <div style="max-width: 600px; margin: 0 auto;">
+                <div class="form-group">
+                    <label>Enter Queue Number</label>
+                    <input type="number" id="consultationQueue" placeholder="Enter queue number">
+                    <button class="btn" onclick="loadPatientForConsultation()" style="margin-top: 10px;">Load Patient</button>
+                </div>
+
+                <div id="selectedPatientInfo" class="patient-card hidden">
+                    <h3 id="selectedPatientName"></h3>
+                    <p><strong>Phone:</strong> <span id="selectedPatientPhone"></span></p>
+                    <p><strong>Age:</strong> <span id="selectedPatientAge"></span> | <strong>Gender:</strong> <span id="selectedPatientGender"></span></p>
+                    <p><strong>Complaint:</strong> <span id="selectedPatientComplaint"></span></p>
+                </div>
+
+                <div id="recordingSection" class="recording-section hidden">
+                    <h3>Session Recording</h3>
+                    <div class="timer" id="recordingTimer">00:00</div>
+                    
+                    <div class="recording-controls">
+                        <button class="btn btn-success" id="startRecording" onclick="startRecording()">🎤 Start Recording</button>
+                        <button class="btn btn-danger hidden" id="stopRecording" onclick="stopRecording()">⏹️ Stop Recording</button>
+                        <button class="btn btn-secondary hidden" id="playRecording" onclick="playRecording()">▶️ Play</button>
+                    </div>
+
+                    <div id="recordingStatus" class="hidden">
+                        <p>Recording saved successfully!</p>
+                        <button class="btn" onclick="processRecording()">Process & Generate Report</button>
+                    </div>
+                </div>
+
+                <div id="reportGeneration" class="report-section hidden">
+                    <h3>Report Generation</h3>
+                    <p>Processing audio and generating medical report...</p>
+                    <div style="text-align: center; margin: 20px 0;">
+                        <div style="border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Dashboard -->
+        <div id="patientDashboard" class="main-content hidden">
+            <div class="header">
+                <h2>Patient Portal</h2>
+                <button class="btn back-btn" onclick="logout()">Logout</button>
+            </div>
+
+            <div id="patientInfo" style="margin-bottom: 30px;"></div>
+            
+            <h3>Your Reports</h3>
+            <div id="patientReports"></div>
+        </div>
+    </div>
+
+    
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+</body>
+</html>
