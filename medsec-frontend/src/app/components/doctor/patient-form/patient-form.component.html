@@ -1,0 +1,104 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <h1>Add New Patient</h1>
+    <button class="btn-secondary" (click)="goBack()">Back to Dashboard</button>
+  </header>
+
+  <div class="dashboard-content">
+    <div class="section">
+      <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="full_name">Full Name:</label>
+          <input
+            type="text"
+            id="full_name"
+            formControlName="full_name"
+            class="form-control"
+            [class.error]="patientForm.get('full_name')?.invalid && patientForm.get('full_name')?.touched"
+          >
+          <div class="error-message" *ngIf="patientForm.get('full_name')?.invalid && patientForm.get('full_name')?.touched">
+            Full name is required (minimum 2 characters)
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number:</label>
+          <input
+            type="tel"
+            id="phone"
+            formControlName="phone"
+            class="form-control"
+            [class.error]="patientForm.get('phone')?.invalid && patientForm.get('phone')?.touched"
+          >
+          <div class="error-message" *ngIf="patientForm.get('phone')?.invalid && patientForm.get('phone')?.touched">
+            Please enter a valid phone number
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email (Optional):</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="form-control"
+            [class.error]="patientForm.get('email')?.invalid && patientForm.get('email')?.touched"
+          >
+          <div class="error-message" *ngIf="patientForm.get('email')?.invalid && patientForm.get('email')?.touched">
+            Please enter a valid email address
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="age">Age:</label>
+          <input
+            type="number"
+            id="age"
+            formControlName="age"
+            class="form-control"
+            min="1"
+            max="120"
+            [class.error]="patientForm.get('age')?.invalid && patientForm.get('age')?.touched"
+          >
+          <div class="error-message" *ngIf="patientForm.get('age')?.invalid && patientForm.get('age')?.touched">
+            Please enter a valid age (1-120)
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="gender">Gender:</label>
+          <select 
+            id="gender" 
+            formControlName="gender"
+            class="form-control"
+            [class.error]="patientForm.get('gender')?.invalid && patientForm.get('gender')?.touched"
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+          <div class="error-message" *ngIf="patientForm.get('gender')?.invalid && patientForm.get('gender')?.touched">
+            Please select a gender
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="error">
+          {{ error }}
+        </div>
+
+        <div class="success-message" *ngIf="success">
+          {{ success }}
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn-primary"
+          [disabled]="!this.patientForm.valid || loading"
+        >
+          {{ loading ? 'Creating Patient...' : 'Add Patient' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

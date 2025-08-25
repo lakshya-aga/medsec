@@ -1,0 +1,48 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <h1>Doctor Dashboard</h1>
+    <button class="btn-secondary" (click)="logout()">Logout</button>
+  </header>
+
+  <nav class="dashboard-nav">
+    <a routerLink="/doctor/patient-form" class="nav-link">Add New Patient</a>
+    <a routerLink="/doctor/session-recorder" class="nav-link">Record Session</a>
+  </nav>
+
+  <main class="dashboard-content">
+    <div class="section">
+      <h2>Recent Patients</h2>
+      
+      <div *ngIf="loading" class="loading">Loading patients...</div>
+      
+      <div *ngIf="!loading && patients.length === 0" class="no-data">
+        No patients found. <a routerLink="/doctor/patient-form">Add your first patient</a>
+      </div>
+      
+      <div class="patients-grid" *ngIf="!loading && patients.length > 0">
+        <div class="patient-card" *ngFor="let patient of patients">
+          <div class="patient-info">
+            <h3>{{ patient.full_name }}</h3>
+            <p><strong>Queue #:</strong> {{ patient.queue_number }}</p>
+            <p><strong>Phone:</strong> {{ patient.phone }}</p>
+            <p><strong>Age:</strong> {{ patient.age }}</p>
+            <p><strong>Gender:</strong> {{ patient.gender }}</p>
+            <p class="status" [class.completed]="patient.is_completed">
+              Status: {{ patient.is_completed ? 'Completed' : 'Pending' }}
+            </p>
+          </div>
+          <div class="patient-actions">
+            <a 
+              class="btn-primary btn-sm"
+              *ngIf="!patient.is_completed"
+              [routerLink]="['/doctor/session-recorder']"
+              [queryParams]="{ queue: patient.queue_number }"
+            >
+              Record Session
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,46 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <h1>Patient Dashboard</h1>
+    <div>
+      <span style="margin-right: 1rem;">Welcome, {{ patientName }}</span>
+      <button class="btn-secondary" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="dashboard-content">
+    <div class="section">
+      <h2>Your Medical Reports</h2>
+      
+      <div *ngIf="loading" class="loading">Loading reports...</div>
+      
+      <div *ngIf="!loading && reports.length === 0" class="no-data">
+        No reports available yet. Please visit your doctor for a session.
+      </div>
+      
+      <div class="patients-grid" *ngIf="!loading && reports.length > 0">
+        <div class="patient-card" *ngFor="let report of reports">
+          <div class="patient-info">
+            <h3>Session Report #{{ report.id }}</h3>
+            <p><strong>Date:</strong> {{ report.created_at | date:'medium' }}</p>
+            <p><strong>Doctor:</strong> {{ report.doctor_name }}</p>
+            <p class="status" [class.completed]="report.report_available">
+              Status: {{ report.report_available ? 'Available' : 'Processing' }}
+            </p>
+          </div>
+          <div class="patient-actions">
+            <button 
+              class="btn-primary btn-sm"
+              *ngIf="report.report_available"
+              (click)="viewReport(report.id)"
+            >
+              View Report
+            </button>
+            <span *ngIf="!report.report_available" class="text-muted">
+              Report being processed...
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

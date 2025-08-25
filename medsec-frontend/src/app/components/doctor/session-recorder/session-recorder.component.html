@@ -1,0 +1,113 @@
+<div class="dashboard">
+  <header class="dashboard-header">
+    <h1>Record Session</h1>
+    <button class="btn-secondary" (click)="goBack()">Back to Dashboard</button>
+  </header>
+
+  <div class="dashboard-content">
+    <div class="section">
+      <h2>Patient Selection</h2>
+      <form [formGroup]="sessionForm">
+        <div class="form-group">
+          <label for="queue_number">Queue Number:</label>
+          <input
+            type="number"
+            id="queue_number"
+            formControlName="queue_number"
+            class="form-control"
+            min="1"
+          >
+        </div>
+        <button 
+          type="button" 
+          class="btn-primary"
+          (click)="loadPatient()"
+          [disabled]="!sessionForm.get('queue_number')?.value || loading"
+        >
+          {{ loading ? 'Loading...' : 'Load Patient' }}
+        </button>
+      </form>
+
+      <div class="error-message" *ngIf="error">
+        {{ error }}
+      </div>
+    </div>
+
+    <div class="section" *ngIf="patient">
+      <h2>Patient Information</h2>
+      <div class="patient-info-display">
+        <h3>{{ patient.full_name }}</h3>
+        <p><strong>Queue Number:</strong> {{ patient.queue_number }}</p>
+        <p><strong>Phone:</strong> {{ patient.phone }}</p>
+        <p><strong>Age:</strong> {{ patient.age }}</p>
+        <p><strong>Gender:</strong> {{ patient.gender }}</p>
+        <p><strong>Email:</strong> {{ patient.email || 'Not provided' }}</p>
+      </div>
+    </div>
+
+    <div class="section" *ngIf="patient">
+      <h2>Audio Recording</h2>
+      
+      <div class="recording-controls">
+        <button 
+          type="button" 
+          class="btn-primary"
+          (click)="startRecording()"
+          [disabled]="recording"
+        >
+          Start Recording
+        </button>
+        
+        <button 
+          type="button" 
+          class="btn-secondary"
+          (click)="stopRecording()"
+          [disabled]="!recording"
+        >
+          Stop Recording
+        </button>
+        
+        <div class="recording-indicator" *ngIf="recording">
+          Recording...
+        </div>
+
+        <button 
+        type="button" 
+        class="btn-warning"
+        (click)="getDiagnosis()"
+        *ngIf="recording"
+        >
+        Get Diagnosis
+        </button>
+      </div>
+
+      <div class="file-upload">
+        <label for="audio-file">Or Upload Audio File:</label>
+        <input 
+          type="file" 
+          id="audio-file"
+          accept="audio/*"
+          (change)="onFileSelected($event)"
+        >
+      </div>
+
+      <div *ngIf="selectedFile" class="success-message">
+        Audio file ready: {{ selectedFile.name }}
+      </div>
+
+      <div class="success-message" *ngIf="success">
+        {{ success }}
+      </div>
+
+      <button 
+        type="button" 
+        class="btn-primary"
+        (click)="onSubmit()"
+        [disabled]="!selectedFile || loading"
+        style="margin-top: 1rem;"
+      >
+        {{ loading ? 'Processing...' : 'Create Session & Generate Report' }}
+      </button>
+    </div>
+  </div>
+</div>
